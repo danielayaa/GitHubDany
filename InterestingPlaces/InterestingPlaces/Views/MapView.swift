@@ -36,6 +36,7 @@ struct MapView: View {
     
     @State private var region: MKCoordinateRegion
     @State private var mapType: MKMapType = .standard
+    @State private var showSearch = false
     @Environment(\.presentationMode) private var presentationMode
     
     init(location: Place, places: [Place]) {
@@ -46,7 +47,7 @@ struct MapView: View {
     
     var body: some View {
         ZStack {
-            MapViewUI(location: location, mapViewType: mapType)
+            MapViewUI(location: location, places: places, mapViewType: mapType)
             
             VStack {
               HStack {
@@ -57,6 +58,12 @@ struct MapView: View {
                             .imageScale(.large)
                     }
                     Spacer()
+                    Button {
+                    showSearch.toggle()
+                    } label: {
+                        Image(systemName: "magnifyingglass.circle.fill")
+                            .imageScale(.large)
+                    }
                 }
                .padding()
                 Spacer()
@@ -71,6 +78,9 @@ struct MapView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .navigationBarHidden(false)
+        .sheet(isPresented: $showSearch) {
+            MapSearchView(region: region)
+        }
     }
 }
 
